@@ -17,22 +17,22 @@ end
 Customer(name::String) = Customer(name, [])
 addrental(c::Customer, r::Rental) = push!(c.rentals, r)
 
-function amountfor(each)
-    thisamount::Float64 = 0
-    if each.movie.pricecode == REGULAR
-        thisamount += 2
-        if each.daysrented > 2
-            thisamount += (each.daysrented - 2) * 1.5
+function amountfor(rental)
+    result::Float64 = 0
+    if rental.movie.pricecode == REGULAR
+        result += 2
+        if rental.daysrented > 2
+            result += (rental.daysrented - 2) * 1.5
         end
-    elseif each.movie.pricecode == NEW_RELEASE
-        thisamount += each.daysrented * 3
-    elseif each.movie.pricecode == CHILDRENS
-        thisamount += 1.5
-        if each.daysrented > 3
-            thisamount += (each.daysrented - 3) * 1.5
+    elseif rental.movie.pricecode == NEW_RELEASE
+        result += rental.daysrented * 3
+    elseif rental.movie.pricecode == CHILDRENS
+        result += 1.5
+        if rental.daysrented > 3
+            result += (rental.daysrented - 3) * 1.5
         end
     end
-    return thisamount
+    return result
 end
 
 function statement(customer::Customer)
