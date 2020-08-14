@@ -44,23 +44,26 @@ end
 Customer(name::String) = Customer(name, [])
 addrental(c::Customer, r::Rental) = push!(c.rentals, r)
 
-function getCharge(rental)
+function getCharge(price::Price, daysrented::Int)
     result::Float64 = 0
-    if rental.movie.pricecode == REGULAR
+    code = pricecode(price)
+    if code == REGULAR
         result += 2
-        if rental.daysrented > 2
-            result += (rental.daysrented - 2) * 1.5
+        if daysrented > 2
+            result += (daysrented - 2) * 1.5
         end
-    elseif rental.movie.pricecode == NEW_RELEASE
-        result += rental.daysrented * 3
-    elseif rental.movie.pricecode == CHILDRENS
+    elseif code == NEW_RELEASE
+        result += daysrented * 3
+    elseif code == CHILDRENS
         result += 1.5
-        if rental.daysrented > 3
-            result += (rental.daysrented - 3) * 1.5
+        if daysrented > 3
+            result += (daysrented - 3) * 1.5
         end
     end
     return result
 end
+
+getCharge(rental::Rental) = getCharge(rental.movie.price, rental.daysrented)
 
 function getFrequentRenterPoints(rental)
     frequentrenterpoints = 1
