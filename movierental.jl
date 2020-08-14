@@ -53,10 +53,9 @@ function statement(customer::Customer)
 
         # show figures for this rental
         result *= "\t$(each.movie.title)\t$(thisamount)\n"
-        totalamount += thisamount
     end
     # add footer lines
-    result *= "Amount owed is $(totalamount)\n"
+    result *= "Amount owed is $(sum(map(amountfor, customer.rentals)))\n"
     result *= "You earned $(getTotalFrequentRenterPoints(customer)) frequent renter points"
     return result
 end
