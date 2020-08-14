@@ -45,13 +45,9 @@ end
 
 function statement(customer::Customer)
     totalamount::Float64 = 0.0
-    frequentrenterpoints = 0
     result = "Rental Record for $(customer.name)\n"
     for each in customer.rentals
         thisamount = amountfor(each)
-
-        # add frequent renter points
-        frequentrenterpoints += getFrequentRenterPoints(each)
 
         # show figures for this rental
         result *= "\t$(each.movie.title)\t$(thisamount)\n"
@@ -59,6 +55,6 @@ function statement(customer::Customer)
     end
     # add footer lines
     result *= "Amount owed is $(totalamount)\n"
-    result *= "You earned $(frequentrenterpoints) frequent renter points"
+    result *= "You earned $(sum(map(getFrequentRenterPoints, customer.rentals))) frequent renter points"
     return result
 end
