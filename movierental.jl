@@ -1,9 +1,36 @@
 @enum PriceCode REGULAR CHILDRENS NEW_RELEASE
 
-struct Movie
-    title::String
-    pricecode::PriceCode
+abstract type Price end
+struct RegularPrice <: Price end
+struct ChildrensPrice <: Price end
+struct NewReleasePrice <: Price end
+
+function Price(pricecode)
+    if pricecode == REGULAR
+        price = RegularPrice()
+    elseif pricecode == CHILDRENS
+        price = ChildrensPrice()
+    elseif pricecode == NEW_RELEASE
+        price = NewReleasePrice()
+    else
+        error("Incorrect Price Code")
+    end
+    return price
 end
+pricecode(::RegularPrice) = REGULAR
+pricecode(::ChildrensPrice) = CHILDRENS
+pricecode(::NewReleasePrice) = NEW_RELEASE
+
+mutable struct Movie
+    title::String
+    price::Price
+end
+
+function Movie(title::String, pricecode::PriceCode)
+    Movie(title, Price(pricecode))
+end
+setprice(movie::Movie, pricecode::PriceCode) = movie.price = Price(pricecode)
+Base.getproperty(m::Movie, s::Symbol) = s == :pricecode ? pricecode(m.price) : getfield(m, s)
 
 struct Rental
     movie::Movie
