@@ -44,23 +44,26 @@ end
 Customer(name::String) = Customer(name, [])
 addrental(c::Customer, r::Rental) = push!(c.rentals, r)
 
-function getCharge(price::Price, daysrented::Int)
-    result::Float64 = 0
-    code = pricecode(price)
-    if code == REGULAR
-        result += 2
-        if daysrented > 2
-            result += (daysrented - 2) * 1.5
-        end
-    elseif code == NEW_RELEASE
-        result += daysrented * 3
-    elseif code == CHILDRENS
-        result += 1.5
-        if daysrented > 3
-            result += (daysrented - 3) * 1.5
-        end
+function getCharge(::RegularPrice, daysrented::Int)
+    result::Float64 = 2
+    if daysrented > 2
+        result += (daysrented - 2) * 1.5
     end
     return result
+end
+
+getCharge(::NewReleasePrice, daysrented::Int)::Float64 = return daysrented * 3
+
+function getCharge(::ChildrensPrice, daysrented::Int)
+    result = 1.5
+    if daysrented > 3
+        result += (daysrented - 3) * 1.5
+    end
+    return result
+end
+
+function getCharge(price::Price, daysrented::Int)
+    error("Price charge not implemented")
 end
 
 getCharge(rental::Rental) = getCharge(rental.movie.price, rental.daysrented)
