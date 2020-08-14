@@ -35,9 +35,9 @@ function amountfor(rental)
     return result
 end
 
-function getFrequentRenterPoints(each, frequentrenterpoints)
-    frequentrenterpoints += 1
-    if each.movie.pricecode == NEW_RELEASE && each.daysrented > 1
+function getFrequentRenterPoints(rental)
+    frequentrenterpoints = 1
+    if rental.movie.pricecode == NEW_RELEASE && rental.daysrented > 1
         frequentrenterpoints += 1
     end
     return frequentrenterpoints
@@ -51,7 +51,7 @@ function statement(customer::Customer)
         thisamount = amountfor(each)
 
         # add frequent renter points
-        frequentrenterpoints = getFrequentRenterPoints(each, frequentrenterpoints)
+        frequentrenterpoints += getFrequentRenterPoints(each)
 
         # show figures for this rental
         result *= "\t$(each.movie.title)\t$(thisamount)\n"
