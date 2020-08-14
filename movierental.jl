@@ -68,13 +68,10 @@ end
 
 getCharge(rental::Rental) = getCharge(rental.movie.price, rental.daysrented)
 
-function getFrequentRenterPoints(rental)
-    frequentrenterpoints = 1
-    if rental.movie.pricecode == NEW_RELEASE && rental.daysrented > 1
-        frequentrenterpoints += 1
-    end
-    return frequentrenterpoints
-end
+getFrequentRenterPoints(::Price, daysRented::Int) = 1
+getFrequentRenterPoints(::NewReleasePrice, daysRented::Int) = daysRented > 1 ? 2 : 1
+
+getFrequentRenterPoints(rental::Rental) = getFrequentRenterPoints(rental.movie.price, rental.daysrented)
 
 getTotalFrequentRenterPoints(customer) = sum(map(getFrequentRenterPoints, customer.rentals))
 
