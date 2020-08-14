@@ -17,26 +17,30 @@ end
 Customer(name::String) = Customer(name, [])
 addrental(c::Customer, r::Rental) = push!(c.rentals, r)
 
+function amountfor(each)
+    thisamount::Float64 = 0
+    if each.movie.pricecode == REGULAR
+        thisamount += 2
+        if each.daysrented > 2
+            thisamount += (each.daysrented - 2) * 1.5
+        end
+    elseif each.movie.pricecode == NEW_RELEASE
+        thisamount += each.daysrented * 3
+    elseif each.movie.pricecode == CHILDRENS
+        thisamount += 1.5
+        if each.daysrented > 3
+            thisamount += (each.daysrented - 3) * 1.5
+        end
+    end
+    return thisamount
+end
+
 function statement(customer::Customer)
     totalamount::Float64 = 0.0
     frequentrenterpoints = 0
     result = "Rental Record for $(customer.name)\n"
     for each in customer.rentals
-        thisamount::Float64 = 0
-        # determine amounts for each line
-        if each.movie.pricecode == REGULAR
-            thisamount += 2
-            if each.daysrented > 2
-                thisamount += (each.daysrented - 2) * 1.5
-            end
-        elseif each.movie.pricecode == NEW_RELEASE
-            thisamount += each.daysrented * 3
-        elseif each.movie.pricecode == CHILDRENS
-            thisamount += 1.5
-            if each.daysrented > 3
-                thisamount += (each.daysrented - 3) * 1.5
-            end
-        end
+        thisamount = amountfor(each)
 
         # add frequent renter points
         frequentrenterpoints += 1
