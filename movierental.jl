@@ -17,7 +17,7 @@ end
 Customer(name::String) = Customer(name, [])
 addrental(c::Customer, r::Rental) = push!(c.rentals, r)
 
-function amountfor(rental)
+function getCharge(rental)
     result::Float64 = 0
     if rental.movie.pricecode == REGULAR
         result += 2
@@ -49,10 +49,10 @@ function statement(customer::Customer)
     result = "Rental Record for $(customer.name)\n"
     for each in customer.rentals
         # show figures for this rental
-        result *= "\t$(each.movie.title)\t$(amountfor(each))\n"
+        result *= "\t$(each.movie.title)\t$(getCharge(each))\n"
     end
     # add footer lines
-    result *= "Amount owed is $(sum(map(amountfor, customer.rentals)))\n"
+    result *= "Amount owed is $(sum(map(getCharge, customer.rentals)))\n"
     result *= "You earned $(getTotalFrequentRenterPoints(customer)) frequent renter points"
     return result
 end
