@@ -45,6 +45,8 @@ end
 
 getTotalFrequentRenterPoints(customer) = sum(map(getFrequentRenterPoints, customer.rentals))
 
+getTotalCharge(customer) = sum(map(getCharge, customer.rentals))
+
 function statement(customer::Customer)
     result = "Rental Record for $(customer.name)\n"
     for each in customer.rentals
@@ -52,7 +54,7 @@ function statement(customer::Customer)
         result *= "\t$(each.movie.title)\t$(getCharge(each))\n"
     end
     # add footer lines
-    result *= "Amount owed is $(sum(map(getCharge, customer.rentals)))\n"
+    result *= "Amount owed is $(getTotalCharge(customer))\n"
     result *= "You earned $(getTotalFrequentRenterPoints(customer)) frequent renter points"
     return result
 end
