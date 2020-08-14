@@ -43,6 +43,8 @@ function getFrequentRenterPoints(rental)
     return frequentrenterpoints
 end
 
+getTotalFrequentRenterPoints(customer) = sum(map(getFrequentRenterPoints, customer.rentals))
+
 function statement(customer::Customer)
     totalamount::Float64 = 0.0
     result = "Rental Record for $(customer.name)\n"
@@ -55,6 +57,6 @@ function statement(customer::Customer)
     end
     # add footer lines
     result *= "Amount owed is $(totalamount)\n"
-    result *= "You earned $(sum(map(getFrequentRenterPoints, customer.rentals))) frequent renter points"
+    result *= "You earned $(getTotalFrequentRenterPoints(customer)) frequent renter points"
     return result
 end
